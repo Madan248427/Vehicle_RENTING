@@ -4,7 +4,7 @@ import { useUser } from "@clerk/clerk-react"
 import { collection, getDocs, query, orderBy, doc, getDoc } from "firebase/firestore"
 import { db } from "../../firebase/firebase"
 import { Star, User, Calendar, MessageSquare, Loader2, AlertCircle, Eye, X } from "lucide-react"
-import Sidebar from "../sidebar/sidebar-dashboard"
+import Sidebar from "../Sidebar/sidebar-dashboard"
 import styles from "./RatingManagement.module.css"
 
 export default function RatingManagement() {
