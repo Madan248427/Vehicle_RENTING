@@ -2,7 +2,7 @@ import React from 'react';
 import { UserProfile, useUser } from '@clerk/clerk-react';
 
 // Import sidebars
-import UserSidebar from '../side-bar/sidebar';
+import UserSidebar from '../Sidebar/sidebar';
 import AdminSidebar from '../../Admin/sidebar/sidebar-dashboard';
 
 export default function EditProfileSecurityPage() {
