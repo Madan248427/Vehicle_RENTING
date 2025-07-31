@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 // Import both sidebars
 import UserSidebar from '../side-bar/sidebar';
-import AdminSidebar from '../../Admin/sidebar/sidebar-dashboard';
+import AdminSidebar from '../../Admin/Sidebar/sidebar-dashboard';
 
 export default function ProfilePage() {
   const { isLoaded, isSignedIn, user } = useUser();
