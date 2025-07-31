@@ -1,5 +1,5 @@
 import VehicleComplaintForm from "./Complainform";
-import Sidebar from "../side-bar/sidebar";
+import Sidebar from "../Sidebar/sidebar";
 
 import React from 'react'
 

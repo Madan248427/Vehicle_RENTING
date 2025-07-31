@@ -1,7 +1,8 @@
 "use client"
 
 import { useUser, useClerk } from "@clerk/clerk-react"
-import Sidebar from "./side-bar/sidebar" 
+import Sidebar from "./Sidebar/sidebar" 
+
 export default function User() {
   const { user } = useUser()
   const { signOut } = useClerk()

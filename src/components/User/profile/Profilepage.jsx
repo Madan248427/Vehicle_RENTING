@@ -3,8 +3,9 @@ import { useUser } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
 
 // Import both sidebars
-import UserSidebar from '../side-bar/sidebar';
+import UserSidebar from '../Sidebar/sidebar';
 import AdminSidebar from '../../Admin/Sidebar/sidebar-dashboard';
+
 
 export default function ProfilePage() {
   const { isLoaded, isSignedIn, user } = useUser();

@@ -6,7 +6,8 @@ import { db } from "../../firebase/firebase"
 import { useUser } from "@clerk/clerk-react"
 import { Star } from "lucide-react"
 import "./my-reviews.css"
-import Sidebar from "../side-bar/sidebar"
+import Sidebar from "../Sidebar/sidebar"
+
 
 export default function MyReviews() {
   const { user, isLoaded } = useUser()

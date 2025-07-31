@@ -22,7 +22,7 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react"
-import Sidebar from "../side-bar/sidebar"
+import Sidebar from "../Sidebar/sidebar"
 import styles from "./UserBookings.module.css"
 
 export default function UserBookings() {
