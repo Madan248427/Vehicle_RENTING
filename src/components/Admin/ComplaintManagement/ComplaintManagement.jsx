@@ -4,7 +4,7 @@ import { useUser } from "@clerk/clerk-react"
 import { collection, getDocs, query, orderBy, doc, updateDoc } from "firebase/firestore"
 import { db } from "../../firebase/firebase"
 import { AlertTriangle, Plus, User, Calendar, Clock, MessageSquare, Car, Phone, Mail, CheckCircle, XCircle, AlertCircle, Loader2, Filter, Search, Eye, Edit3 } from 'lucide-react'
-import Sidebar from "../sidebar/sidebar-dashboard"
+import Sidebar from "../Sidebar/sidebar-dashboard"
 import "./ComplaintManagement.css"
 import { Link } from 'react-router-dom';
 
