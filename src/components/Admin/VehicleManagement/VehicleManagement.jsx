@@ -19,7 +19,7 @@ import {
   Trash2,
   Calendar,
 } from "lucide-react"
-import Sidebar from "../sidebar_temp/sidebar-dashboard";
+import Sidebar from "../Sidebar/sidebar-dashboard";
 import "./VehicleManagement.css"
 
 export default function VehicleManagement() {
