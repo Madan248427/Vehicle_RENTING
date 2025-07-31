@@ -3,7 +3,7 @@ import { UserProfile, useUser } from '@clerk/clerk-react';
 
 // Import sidebars
 import UserSidebar from '../Sidebar/sidebar';
-import AdminSidebar from '../../Admin/sidebar/sidebar-dashboard';
+import AdminSidebar from '../../Admin/Sidebar/sidebar-dashboard';
 
 export default function EditProfileSecurityPage() {
   const { isLoaded, isSignedIn, user } = useUser();
