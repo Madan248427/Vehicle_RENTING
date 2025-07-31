@@ -18,7 +18,7 @@ import {
   Flag,
   Search,
 } from "lucide-react"
-import Sidebar from "../Sidebar/sidebar-dashboard"
+import Sidebar from "../Sidebar/sidebar-dashboard.jsx"
 import styles from "./BookingManagement.module.css"
 
 export default function BookingManagement() {
