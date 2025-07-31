@@ -2,7 +2,7 @@
 import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { useUser, useClerk } from "@clerk/clerk-react"
-import "../../User/Sidebar/sidebar.css"
+import "../../User/Sidebar/Sidebar.css"
 
 const Sidebar = () => {
   const { user, isLoaded } = useUser()
