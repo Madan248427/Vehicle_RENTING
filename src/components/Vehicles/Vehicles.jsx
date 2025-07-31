@@ -4,7 +4,7 @@ import { collection, getDocs } from "firebase/firestore"
 import { db } from "../firebase/firebase"
 import { Car, Star } from "lucide-react"
 import { Link } from "react-router-dom"
-import styles from "./Vehicle.module.css"
+import styles from "../Vehicles/Vehicle.module.css";
 
 export default function Vehicles({ handleVehicleClick }) {
   const [vehicles, setVehicles] = useState([])
