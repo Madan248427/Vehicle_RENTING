@@ -1,15 +1,13 @@
 "use client"
-
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { X, Car, User, MapPin, CreditCard, Upload, Loader2 } from "lucide-react"
-import { collection, addDoc, serverTimestamp } from "firebase/firestore"
+import { collection, addDoc, serverTimestamp, doc, updateDoc } from "firebase/firestore"
 import { db } from "../firebase/firebase"
-import { useParams } from "react-router-dom"
+import { useUser } from "@clerk/clerk-react"
 import "./booking-form.css"
 
 export default function BookingForm({ vehicle, onClose }) {
-  const { id: vehicleId } = useParams() // Get vehicle ID from URL
-
+  const { isLoaded, isSignedIn, user } = useUser()
   const [bookingData, setBookingData] = useState({
     startDate: "",
     endDate: "",
@@ -25,38 +23,70 @@ export default function BookingForm({ vehicle, onClose }) {
     zipCode: "",
     needDriver: false,
     licenseImage: null,
+    userId: "",
+    userEmail: "",
   })
-
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [uploadProgress, setUploadProgress] = useState("")
 
-  // Cloudinary upload function
+  // Driver fee per day
+  const DRIVER_FEE_PER_DAY = 25
+
+  useEffect(() => {
+    if (isLoaded) {
+      setBookingData((prevData) => ({
+        ...prevData,
+        userId: isSignedIn ? user.id : "unidentified",
+        userEmail: isSignedIn ? user.primaryEmailAddress?.emailAddress || "unidentified" : "unidentified",
+        firstName: isSignedIn && user.firstName ? user.firstName : prevData.firstName,
+        lastName: isSignedIn && user.lastName ? user.lastName : prevData.lastName,
+        email:
+          isSignedIn && user.primaryEmailAddress?.emailAddress ? user.primaryEmailAddress.emailAddress : prevData.email,
+      }))
+    }
+  }, [isLoaded, isSignedIn, user])
+
   const uploadToCloudinary = async (file) => {
     const formData = new FormData()
     formData.append("file", file)
-    formData.append("upload_preset", "your_upload_preset") // Replace with your Cloudinary upload preset
-    formData.append("cloud_name", "your_cloud_name") // Replace with your Cloudinary cloud name
+    formData.append("upload_preset", "images")
+    formData.append("cloud_name", "duortzwqq")
 
     try {
       setUploadProgress("Uploading license image...")
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/your_cloud_name/image/upload`, // Replace with your cloud name
-        {
-          method: "POST",
-          body: formData,
-        },
-      )
+      const response = await fetch("https://api.cloudinary.com/v1_1/duortzwqq/image/upload", {
+        method: "POST",
+        body: formData,
+      })
 
       if (!response.ok) {
         throw new Error("Failed to upload image")
       }
 
       const data = await response.json()
-      return data.secure_url // Returns the Cloudinary URL
+      return data.secure_url
     } catch (error) {
       console.error("Error uploading to Cloudinary:", error)
       throw error
     }
+  }
+
+  const calculateDays = () => {
+    if (bookingData.startDate && bookingData.endDate) {
+      const start = new Date(bookingData.startDate)
+      const end = new Date(bookingData.endDate)
+      const diffTime = Math.abs(end - start)
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      return diffDays || 1
+    }
+    return 1
+  }
+
+  const calculateTotalPrice = () => {
+    const days = calculateDays()
+    const vehiclePrice = vehicle ? vehicle.price * days : 0
+    const driverPrice = bookingData.needDriver ? DRIVER_FEE_PER_DAY * days : 0
+    return vehiclePrice + driverPrice
   }
 
   const handleBookingSubmit = async (e) => {
@@ -67,69 +97,85 @@ export default function BookingForm({ vehicle, onClose }) {
     try {
       let licenseImageUrl = null
 
-      // Upload image to Cloudinary if driver is not needed and image exists
       if (!bookingData.needDriver && bookingData.licenseImage) {
         licenseImageUrl = await uploadToCloudinary(bookingData.licenseImage)
         setUploadProgress("Image uploaded successfully!")
       }
 
-      // Prepare data for Firebase
+      // Get current date and time for the new fields
+      const now = new Date()
+      const bookedDate = now.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+
+      const bookedTime = now.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      })
+
+      const days = calculateDays()
+      const vehiclePrice = vehicle.price * days
+      const driverPrice = bookingData.needDriver ? DRIVER_FEE_PER_DAY * days : 0
+      const totalPrice = vehiclePrice + driverPrice
+
       const bookingDataForFirebase = {
-        // Vehicle details from URL and props
-        vehicleId: vehicleId, // From URL params
+        vehicleId: vehicle.id,
         vehicleName: vehicle.name,
         vehiclePrice: vehicle.price,
         vehicleCategory: vehicle.category,
-
-        // Rental details
         startDate: bookingData.startDate,
         endDate: bookingData.endDate,
         needDriver: bookingData.needDriver,
-        numberOfDays: calculateDays(),
-        totalPrice: vehicle.price * calculateDays(),
-
-        // Personal information
+        numberOfDays: days,
+        vehicleTotalPrice: vehiclePrice,
+        driverFeePerDay: bookingData.needDriver ? DRIVER_FEE_PER_DAY : 0,
+        driverTotalPrice: driverPrice,
+        totalPrice: totalPrice,
         firstName: bookingData.firstName,
         lastName: bookingData.lastName,
         email: bookingData.email,
         phone: bookingData.phone,
-
-        // License information (only if self-drive)
+        userId: bookingData.userId,
+        userEmail: bookingData.userEmail,
         ...(!bookingData.needDriver && {
           licenseNumber: bookingData.licenseNumber,
-          licenseImageUrl: licenseImageUrl, // Cloudinary URL
+          licenseImageUrl: licenseImageUrl,
         }),
-
-        // Location details
         pickupLocation: bookingData.pickupLocation,
         dropoffLocation: bookingData.dropoffLocation,
         address: bookingData.address,
         city: bookingData.city,
         zipCode: bookingData.zipCode,
-
-        // Metadata
-        bookingStatus: "pending",
+        bookingStatus: "Pending",
+        bookedDate: bookedDate,
+        bookedTime: bookedTime,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       }
 
       setUploadProgress("Saving booking details...")
-
-      // Save to Firebase Firestore
       const docRef = await addDoc(collection(db, "bookings"), bookingDataForFirebase)
-
       console.log("Booking saved with ID: ", docRef.id)
-      setUploadProgress("Booking submitted successfully!")
 
-      // Show success message
+      const vehicleRef = doc(db, "vehicles", vehicle.id)
+      await updateDoc(vehicleRef, {
+        isAvailable: false,
+        updatedAt: serverTimestamp(),
+      })
+      console.log(`Vehicle ${vehicle.id} marked as unavailable.`)
+
+      setUploadProgress("Booking submitted successfully!")
       alert(`Booking submitted successfully! Booking ID: ${docRef.id}`)
 
-      // Close modal after short delay
       setTimeout(() => {
         onClose()
       }, 1500)
     } catch (error) {
-      console.error("Error submitting booking:", error)
+      console.error("Error submitting booking or updating vehicle:", error)
       alert("Error submitting booking. Please try again.")
       setUploadProgress("")
     } finally {
@@ -149,7 +195,6 @@ export default function BookingForm({ vehicle, onClose }) {
     setBookingData((prevData) => ({
       ...prevData,
       needDriver: e.target.checked,
-      // Clear license data if driver is needed
       ...(e.target.checked && {
         licenseNumber: "",
         licenseImage: null,
@@ -157,19 +202,11 @@ export default function BookingForm({ vehicle, onClose }) {
     }))
   }
 
-  const calculateDays = () => {
-    if (bookingData.startDate && bookingData.endDate) {
-      const start = new Date(bookingData.startDate)
-      const end = new Date(bookingData.endDate)
-      const diffTime = Math.abs(end - start)
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-      return diffDays || 1
-    }
-    return 1
-  }
-
-  const totalPrice = vehicle ? vehicle.price * calculateDays() : 0
+  const totalPrice = calculateTotalPrice()
   const needsLicense = !bookingData.needDriver
+  const days = calculateDays()
+  const vehicleSubtotal = vehicle ? vehicle.price * days : 0
+  const driverSubtotal = bookingData.needDriver ? DRIVER_FEE_PER_DAY * days : 0
 
   return (
     <div
@@ -184,14 +221,13 @@ export default function BookingForm({ vehicle, onClose }) {
         <div className="booking-modal-header">
           <div className="header-content">
             <h2>Book {vehicle.name}</h2>
-            <p className="vehicle-id">Vehicle ID: {vehicleId}</p>
+            <p className="vehicle-id">Vehicle ID: {vehicle.id}</p>
           </div>
           <button className="close-btn" onClick={onClose} disabled={isSubmitting}>
             <X size={24} />
           </button>
         </div>
 
-        {/* Loading overlay */}
         {isSubmitting && (
           <div className="loading-overlay">
             <div className="loading-content">
@@ -207,7 +243,6 @@ export default function BookingForm({ vehicle, onClose }) {
               <Car size={20} />
               Rental Details
             </h3>
-
             <div className="form-group">
               <label className="checkbox-container">
                 <input
@@ -218,15 +253,14 @@ export default function BookingForm({ vehicle, onClose }) {
                   className="checkbox-input"
                   disabled={isSubmitting}
                 />
-                <span className="checkbox-checkmark"></span>I need a driver
+                <span className="checkbox-checkmark"></span>I need a driver (+$25/day)
               </label>
               <p className="checkbox-description">
                 {bookingData.needDriver
-                  ? "Our professional driver will handle the driving for you."
+                  ? "Our professional driver will handle the driving for you. Additional $25 per day."
                   : "You'll drive the vehicle yourself. A valid driver's license is required."}
               </p>
             </div>
-
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="startDate">Start Date</label>
@@ -269,7 +303,7 @@ export default function BookingForm({ vehicle, onClose }) {
                   name="firstName"
                   value={bookingData.firstName}
                   onChange={handleInputChange}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || (isSignedIn && user.firstName)}
                   required
                 />
               </div>
@@ -281,7 +315,7 @@ export default function BookingForm({ vehicle, onClose }) {
                   name="lastName"
                   value={bookingData.lastName}
                   onChange={handleInputChange}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || (isSignedIn && user.lastName)}
                   required
                 />
               </div>
@@ -295,7 +329,7 @@ export default function BookingForm({ vehicle, onClose }) {
                   name="email"
                   value={bookingData.email}
                   onChange={handleInputChange}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || (isSignedIn && user.primaryEmailAddress?.emailAddress)}
                   required
                 />
               </div>
@@ -313,7 +347,6 @@ export default function BookingForm({ vehicle, onClose }) {
               </div>
             </div>
 
-            {/* Driver's License fields - only show when driver is NOT needed */}
             {needsLicense && (
               <>
                 <div className="form-group">
@@ -442,7 +475,7 @@ export default function BookingForm({ vehicle, onClose }) {
             </div>
             <div className="summary-row">
               <span>Vehicle ID:</span>
-              <span>{vehicleId}</span>
+              <span>{vehicle.id}</span>
             </div>
             <div className="summary-row">
               <span>Daily Rate:</span>
@@ -450,8 +483,20 @@ export default function BookingForm({ vehicle, onClose }) {
             </div>
             <div className="summary-row">
               <span>Number of Days:</span>
-              <span>{calculateDays()}</span>
+              <span>{days}</span>
             </div>
+            <div className="summary-row">
+              <span>Vehicle Subtotal:</span>
+              <span>${vehicleSubtotal}</span>
+            </div>
+            {bookingData.needDriver && (
+              <>
+                <div className="summary-row">
+                  <span>Driver Fee (${DRIVER_FEE_PER_DAY}/day):</span>
+                  <span>${driverSubtotal}</span>
+                </div>
+              </>
+            )}
             <div className="summary-row">
               <span>Service Type:</span>
               <span>{bookingData.needDriver ? "With Driver" : "Self-Drive"}</span>

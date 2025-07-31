@@ -1,36 +1,38 @@
-import { Phone, Mail, Facebook, Twitter, Instagram, Linkedin } from "lucide-react"
+import React from "react";
+import { Phone, Mail, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import styles from "./TopHeader.module.css";
 
 export default function TopHeader() {
   return (
-    <div className="top-header">
-      <div className="container">
-        <div className="top-header-content">
-          <div className="contact-info">
-            <div className="contact-item">
-              <Phone size={16} className="contact-icon" />
+    <div className={styles.topHeader}>
+      <div className={styles.container}>
+        <div className={styles.topHeaderContent}>
+          <div className={styles.contactInfo}>
+            <div className={styles.contactItem}>
+              <Phone size={16} className={styles.contactIcon} />
               <span>+1 (123) 456-7890</span>
             </div>
-            <div className="contact-item">
-              <Mail size={16} className="contact-icon" />
+            <div className={styles.contactItem}>
+              <Mail size={16} className={styles.contactIcon} />
               <span>info@Motovia.com</span>
             </div>
           </div>
-          <div className="social-links">
-            <a href="#" className="social-link" aria-label="Facebook">
+          <div className={styles.socialLinks}>
+            <a href="#" className={styles.socialLink} aria-label="Facebook">
               <Facebook size={18} />
             </a>
-            <a href="#" className="social-link" aria-label="Twitter">
+            <a href="#" className={styles.socialLink} aria-label="Twitter">
               <Twitter size={18} />
             </a>
-            <a href="#" className="social-link" aria-label="Instagram">
+            <a href="#" className={styles.socialLink} aria-label="Instagram">
               <Instagram size={18} />
             </a>
-            <a href="#" className="social-link" aria-label="LinkedIn">
+            <a href="#" className={styles.socialLink} aria-label="LinkedIn">
               <Linkedin size={18} />
             </a>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

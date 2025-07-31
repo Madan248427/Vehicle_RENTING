@@ -5,6 +5,8 @@ import { Car, Truck, Star, Key, ShieldCheck, Map, Headset } from "lucide-react"
 import { collection, getDocs } from "firebase/firestore"
 import { db } from "../firebase/firebase" 
 import "./home-page.css"
+import { Link } from "react-router-dom"
+
 
 
 const cloudinaryBase = "https://res.cloudinary.com/duortzwqq/image/upload"
@@ -101,9 +103,11 @@ export default function Home({ handleVehicleClick, setCurrentPage }) {
                 we have the perfect car for every journey. Experience comfort, reliability, and style with Motovia.
               </p>
               <div className="hero-actions">
-                <button className="btn btn-primary" onClick={() => setCurrentPage("vehicles")}>
+                <Link to="/vehicles" className={`nav-link ${location.pathname.startsWith("/vehicles") ? "active" : ""}`}></Link>
+                <button className="btn btn-primary" >
                   Choose a Car
                 </button>
+                <Link/>
                 <button className="btn btn-secondary">Get the App</button>
               </div>
             </div>
@@ -159,25 +163,23 @@ export default function Home({ handleVehicleClick, setCurrentPage }) {
                     ))}
                   </div>
                   <div className="vehicle-footer">
-                    <div className="vehicle-price">${vehicle.price}/day</div>
-                    <button
-                      className="btn btn-primary"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleVehicleClick(vehicle.id)
-                      }}
-                    >
-                      View Details
-                    </button>
+                    <div className="vehicle-price">Rs {vehicle.price}/day</div>
+                        <Link to={`/vechical_details/${vehicle.id}`}>
+                          <button className="btn btn-primary" onClick={(e) => e.stopPropagation()}>
+                            View Details
+                          </button>
+                        </Link>
                   </div>
                 </div>
               </div>
             ))}
           </div>
           <div className="text-center">
+            <Link to="/vehicles" className={`nav-link ${location.pathname.startsWith("/vehicles") ? "active" : ""}`}>
             <button className="btn btn-outline" onClick={() => setCurrentPage("vehicles")}>
               View All Vehicles
             </button>
+            </Link>
           </div>
         </div>
       </section>

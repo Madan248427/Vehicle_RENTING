@@ -1,7 +1,6 @@
 import React from 'react';
 import { useUser } from '@clerk/clerk-react';
-import { Navigate } from 'react-router-dom';
-import Admin from './Admin';
+import { Navigate, Outlet } from 'react-router-dom';
 
 export default function SecureAdminRoute() {
   const { isLoaded, isSignedIn, user } = useUser();
@@ -12,5 +11,5 @@ export default function SecureAdminRoute() {
   const role = user?.unsafeMetadata?.role;
   if (role !== 'admin') return <Navigate to="/user" />;
 
-  return <Admin />;
+  return <Outlet />;
 }

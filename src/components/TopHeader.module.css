@@ -1,0 +1,51 @@
+/* TopHeader.module.css */
+
+.topHeader {
+  background-color: #000;
+  color: #fff;
+  font-size: 14px;
+  padding: 8px 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.topHeaderContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.contactInfo {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.contactIcon {
+  color: #fff;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 15px;
+}
+
+.socialLink {
+  color: #fff;
+  transition: color 0.3s ease;
+}
+
+.socialLink:hover {
+  color: #3b82f6; /* blue accent on hover */
+}

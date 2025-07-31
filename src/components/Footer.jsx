@@ -1,7 +1,7 @@
 "use client"
 import { Phone, Mail, Clock, Facebook, Twitter, Youtube, Instagram, MapPin } from "lucide-react"
-import { Link } from "react-router-dom" // Import Link for navigation
-import "../../styles/footer.css" // Import the new CSS file
+import { Link } from "react-router-dom"
+import "../../styles/footer.css"
 
 export default function Footer() {
   return (
@@ -31,6 +31,7 @@ export default function Footer() {
               </a>
             </div>
           </div>
+
           <div className="footer-section">
             <h4 className="footer-title">Quick Links</h4>
             <ul className="footer-links">
@@ -66,6 +67,7 @@ export default function Footer() {
               </li>
             </ul>
           </div>
+
           <div className="footer-section">
             <h4 className="footer-title">Our Services</h4>
             <ul className="footer-links">
@@ -101,6 +103,7 @@ export default function Footer() {
               </li>
             </ul>
           </div>
+
           <div className="footer-section">
             <h4 className="footer-title">Contact Info</h4>
             <div className="contact-info">
@@ -123,6 +126,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
+
         <div className="footer-bottom">
           <p>
             &copy; 2024 Motovia. All rights reserved. |{" "}

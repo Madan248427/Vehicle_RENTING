@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import TopHeader from "../components/TopHeader.jsx";
 import Home from "../components/Home/Home.jsx";
-
+import Aboutlanding from "./Aboutlanding.jsx";
 
 
 export default function App() {
@@ -18,6 +18,7 @@ export default function App() {
            <Home /> 
 
       </main>
+     
       <Footer />
       </>
    

@@ -1,6 +1,6 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
-import Vehicles from '../components/Vehicles/Vehicles';
+import Vehicles from '../components/Vehicles/Vehicles'
 
 
 

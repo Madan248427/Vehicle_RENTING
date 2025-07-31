@@ -1,7 +1,6 @@
 import React from 'react';
 import { useUser } from '@clerk/clerk-react';
-import { Navigate } from 'react-router-dom';
-import User from './User';
+import { Navigate, Outlet } from 'react-router-dom';
 
 export default function SecureUserRoute() {
   const { isLoaded, isSignedIn, user } = useUser();
@@ -10,7 +9,8 @@ export default function SecureUserRoute() {
   if (!isSignedIn) return <Navigate to="/sign-in" />;
 
   const role = user?.unsafeMetadata?.role;
+
   if (role === 'admin') return <Navigate to="/admin/dashboard" />;
 
-  return <User />;
+  return <Outlet />; // 👈 This is required to render nested components
 }

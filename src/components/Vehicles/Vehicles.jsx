@@ -1,16 +1,16 @@
 "use client"
-
 import { useEffect, useState } from "react"
 import { collection, getDocs } from "firebase/firestore"
 import { db } from "../firebase/firebase"
 import { Car, Star } from "lucide-react"
 import { Link } from "react-router-dom"
-import "./vehicles.css" // Corrected import path
+import styles from "./Vehicle.module.css"
 
 export default function Vehicles({ handleVehicleClick }) {
   const [vehicles, setVehicles] = useState([])
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [priceFilter, setPriceFilter] = useState("all")
+
   const cloudinaryBase = "https://res.cloudinary.com/duortzwqq/image/upload"
 
   // Helper function to construct Cloudinary URLs
@@ -33,6 +33,7 @@ export default function Vehicles({ handleVehicleClick }) {
         console.error("Error fetching vehicles:", error)
       }
     }
+
     fetchVehicles()
   }, [])
 
@@ -68,55 +69,60 @@ export default function Vehicles({ handleVehicleClick }) {
 
   const priceRanges = [
     { id: "all", label: "All Prices" },
-    { id: "low", label: "Under $150" },
-    { id: "medium", label: "$150 - $250" },
-    { id: "high", label: "Above $250" },
+    { id: "low", label: "Under RS150" },
+    { id: "medium", label: "RS150 - RS250" },
+    { id: "high", label: "Above RS250" },
   ]
 
   // Filtering logic based on selected category and price range
   const filteredVehicles = vehicles.filter((vehicle) => {
     const categoryMatch = selectedCategory === "all" || vehicle.category?.toLowerCase() === selectedCategory
+
     const priceMatch =
       priceFilter === "all" ||
       (priceFilter === "low" && vehicle.price < 150) ||
       (priceFilter === "medium" && vehicle.price >= 150 && vehicle.price < 250) ||
       (priceFilter === "high" && vehicle.price >= 250)
+
     return categoryMatch && priceMatch
   })
 
   return (
-    <div className="vehicles-page">
-      <div className="container">
-        <div className="page-header">
-          <h1 className="page-title">Our Premium Fleet</h1>
-          <p className="page-description">
+    <div className={styles.vehiclesPage}>
+      <div className={styles.container}>
+        <div className={styles.pageHeader}>
+          <h1 className={styles.pageTitle}>Our Premium Fleet</h1>
+          <p className={styles.pageDescription}>
             Discover our premium vehicle collection. Each car is carefully selected and maintained to the highest
             standards.
           </p>
         </div>
-        <div className="vehicles-layout">
+
+        <div className={styles.vehiclesLayout}>
           {/* Sidebar Filters */}
-          <div className="filters-sidebar">
-            <h3 className="filters-title">Filters</h3>
-            <div className="filter-group">
-              <label className="filter-label">Category</label>
+          <div className={styles.filtersSidebar}>
+            <h3 className={styles.filtersTitle}>Filters</h3>
+
+            <div className={styles.filterGroup}>
+              <label className={styles.filterLabel}>Category</label>
               {categories.map((cat) => (
                 <div
                   key={cat.id}
-                  className={`filter-option ${selectedCategory === cat.id ? "active" : ""}`}
+                  className={`${styles.filterOption} ${selectedCategory === cat.id ? styles.active : ""}`}
                   onClick={() => setSelectedCategory(cat.id)}
                 >
                   <span>{cat.label}</span>
-                  <span className="filter-count">{cat.count}</span>
+                  <span className={styles.filterCount}>{cat.count}</span>
                 </div>
               ))}
             </div>
-            <div className="filter-group">
-              <label className="filter-label">Price</label>
+
+            <div className={styles.filterGroup}>
+              <label className={styles.filterLabel}>Price</label>
               {priceRanges.map((price) => (
                 <div
                   key={price.id}
-                  className={`filter-option ${priceFilter === price.id ? "active" : ""}`}
+                  className={`${styles.filterOption} ${priceFilter === price.id ? styles.active : ""}`}
                   onClick={() => setPriceFilter(price.id)}
                 >
                   <span>{price.label}</span>
@@ -124,51 +130,55 @@ export default function Vehicles({ handleVehicleClick }) {
               ))}
             </div>
           </div>
+
           {/* Vehicle List */}
-          <div className="vehicles-content">
-            <div className="vehicles-header">
-              <div className="results-count">
+          <div className={styles.vehiclesContent}>
+            <div className={styles.vehiclesHeader}>
+              <div className={styles.resultsCount}>
                 Showing {filteredVehicles.length} of {vehicles.length} vehicles
               </div>
             </div>
+
             {filteredVehicles.length > 0 ? (
-              <div className="vehicles-grid">
+              <div className={styles.vehiclesGrid}>
                 {filteredVehicles.map((vehicle) => (
-                  <div key={vehicle.id} className="vehicle-card" onClick={() => handleVehicleClick(vehicle.id)}>
-                    <div className="vehicle-image">
+                  <div key={vehicle.id} className={styles.vehicleCard} onClick={() => handleVehicleClick(vehicle.id)}>
+                    <div className={styles.vehicleImage}>
                       <img
-                        src={getCloudinaryImageUrl(vehicle.imageId) || "/placeholder.svg"} // Using helper function
+                        src={getCloudinaryImageUrl(vehicle.imageId) || "/placeholder.svg"}
                         alt={vehicle.name}
-                        className="vehicle-img"
+                        className={styles.vehicleImg}
                         onError={(e) => {
                           e.target.src = "/placeholder.svg?height=200&width=300&text=No+Image"
                         }}
                       />
-                      <div className="vehicle-badge">{vehicle.category}</div>
-                      <div className="vehicle-rating">
+                      <div className={styles.vehicleBadge}>{vehicle.category}</div>
+                      <div className={styles.vehicleRating}>
                         <Star size={12} fill="currentColor" />
                         <span>{vehicle.rating || "4.5"}</span>
                         <span>({vehicle.reviews || "20"})</span>
                       </div>
                     </div>
-                    <div className="vehicle-info">
-                      <h3 className="vehicle-name">{vehicle.name}</h3>
-                      {/* Removed description paragraph */}
-                      <div className="vehicle-features">
+
+                    <div className={styles.vehicleInfo}>
+                      <h3 className={styles.vehicleName}>{vehicle.name}</h3>
+
+                      <div className={styles.vehicleFeatures}>
                         {vehicle.features?.slice(0, 3).map((feature, idx) => (
-                          <div key={idx} className="feature-item">
+                          <div key={idx} className={styles.featureItem}>
                             <span>{feature}</span>
                           </div>
                         ))}
                       </div>
-                      <div className="vehicle-footer">
-                        <div className="vehicle-price">
-                          <span className="price-amount">${vehicle.price}</span>
-                          <span className="price-period">/day</span>
+
+                      <div className={styles.vehicleFooter}>
+                        <div className={styles.vehiclePrice}>
+                          <span className={styles.priceAmount}>RS{vehicle.price}</span>
+                          <span className={styles.pricePeriod}>/day</span>
                         </div>
-                        {/* ✅ Wrapped with Link */}
+
                         <Link to={`/vechical_details/${vehicle.id}`}>
-                          <button className="btn btn-primary" onClick={(e) => e.stopPropagation()}>
+                          <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={(e) => e.stopPropagation()}>
                             View Details
                           </button>
                         </Link>
@@ -178,7 +188,7 @@ export default function Vehicles({ handleVehicleClick }) {
                 ))}
               </div>
             ) : (
-              <div className="no-results">
+              <div className={styles.noResults}>
                 <Car size={64} />
                 <h3>No vehicles found</h3>
                 <p>Try changing filters to see more vehicles.</p>

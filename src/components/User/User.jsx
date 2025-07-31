@@ -1,12 +1,14 @@
 "use client"
 
 import { useUser, useClerk } from "@clerk/clerk-react"
-
+import Sidebar from "./side-bar/sidebar" 
 export default function User() {
   const { user } = useUser()
   const { signOut } = useClerk()
 
   return (
+    <>
+    <Sidebar></Sidebar>
     <div className="dashboard-container">
       <div className="dashboard-header">
         <div className="dashboard-title"> 
@@ -46,5 +48,6 @@ export default function User() {
         </div>
       </div>
     </div>
+    </>
   )
 }

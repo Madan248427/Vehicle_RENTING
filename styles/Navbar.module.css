@@ -1,0 +1,261 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.navbar {
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 18px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbarContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 30px;
+  font-weight: 800;
+  color: #1f2937;
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+
+.logoAccent {
+  color: #3b82f6;
+}
+
+.navMenu {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navItem {
+  position: relative;
+}
+
+.navLink {
+  color: #374151;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 10px 0;
+  transition: color 0.3s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+.navLink::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background-color: #3b82f6;
+  transition: width 0.3s ease;
+}
+
+.navLink:hover::after,
+.activeNavLink::after {
+  width: 100%;
+}
+
+.navLink:hover {
+  color: #3b82f6;
+  transform: translateY(-2px);
+}
+
+.activeNavLink {
+  color: #3b82f6;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.authButtons {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  text-decoration: none;
+  user-select: none;
+}
+
+.btnPrimary {
+  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+  color: white;
+  box-shadow: 0 5px 15px rgba(59, 130, 246, 0.2);
+}
+
+.btnPrimary:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+
+.btnOutline {
+  background: white;
+  color: #6b7280;
+  border: 2px solid #e5e7eb;
+}
+
+.btnOutline:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #1f2937;
+}
+
+.mobileMenuToggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #374151;
+  padding: 5px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.mobileMenuToggle:hover {
+  background-color: #f3f4f6;
+}
+
+.mobileMenuOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  display: flex;
+  justify-content: flex-end;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobileMenuOverlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobileMenu {
+  background-color: white;
+  width: 280px;
+  height: 100%;
+  padding: 30px 20px;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobileMenuOverlay.open .mobileMenu {
+  transform: translateX(0);
+}
+
+.mobileMenuClose {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #374151;
+  cursor: pointer;
+  align-self: flex-end;
+  margin-bottom: 20px;
+}
+
+.mobileNavMenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.mobileNavItem {
+  margin-bottom: 10px;
+}
+
+.mobileNavLink {
+  color: #374151;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 15px 0;
+  display: block;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.mobileNavLink:hover {
+  background-color: #f9fafb;
+  color: #3b82f6;
+}
+
+.mobileAuthButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .navMenu,
+  .navActions {
+    display: none;
+  }
+
+  .mobileMenuToggle {
+    display: block;
+  }
+
+  .navbar {
+    padding: 12px 0;
+  }
+
+  .logo {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 15px;
+  }
+
+  .logo {
+    font-size: 24px;
+  }
+
+  .mobileMenu {
+    width: 100%;
+  }
+}

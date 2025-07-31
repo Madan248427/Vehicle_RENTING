@@ -1,12 +1,11 @@
 "use client"
-
 import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { ArrowLeft, Star, CheckCircle, Settings, Fuel, Users, Gauge } from "lucide-react" // Added Gauge icon for mileage
-import { collection, getDocs } from "firebase/firestore"
-import { db } from "../firebase/firebase" // Keeping your original path
+import { ArrowLeft, Star, CheckCircle, Settings, Fuel, Users, Gauge } from "lucide-react"
+import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore"
+import { db } from "../firebase/firebase"
 import BookingForm from "../Booking/BookingForm"
-import "./vehicle-details.css"
+import "./vehicle-details.module.css"
 
 const cloudinaryBase = "https://res.cloudinary.com/duortzwqq/image/upload"
 
@@ -18,39 +17,95 @@ export default function VehicleDetails() {
   const [activeTab, setActiveTab] = useState("overview")
   const [showBookingForm, setShowBookingForm] = useState(false)
   const [imageLoading, setImageLoading] = useState({})
+  const [isLoadingVehicle, setIsLoadingVehicle] = useState(true)
+
+  // State for ratings - only for displaying existing ratings
+  const [currentVehicleRatings, setCurrentVehicleRatings] = useState([])
+
+  // Function to fetch a single vehicle's data
+  const fetchVehicle = async (vehicleId) => {
+    console.log(`[VehicleDetails] Fetching vehicle with ID: ${vehicleId}`)
+    setIsLoadingVehicle(true)
+    try {
+      const vehicleRef = doc(db, "vehicles", vehicleId)
+      const vehicleSnap = await getDoc(vehicleRef, { source: "server" })
+      if (vehicleSnap.exists()) {
+        const foundVehicle = { id: vehicleSnap.id, ...vehicleSnap.data() }
+        console.log("[VehicleDetails] Raw vehicle data from Firebase:", foundVehicle)
+        const processedVehicle = {
+          ...foundVehicle,
+          is_available: foundVehicle.isAvailable !== undefined ? foundVehicle.isAvailable : foundVehicle.is_available,
+          gallery: foundVehicle.imageId ? [foundVehicle.imageId] : foundVehicle.gallery || [],
+          longDescription: foundVehicle.longDescription || foundVehicle.description || "No description available",
+          specifications: {
+            engine: foundVehicle.specifications?.engine || "Not specified",
+            power: foundVehicle.specifications?.power || "Not specified",
+            seating: foundVehicle.specifications?.seating || "Not specified",
+            drivetrain: foundVehicle.specifications?.drivetrain || "Not specified",
+            fuelType: foundVehicle.fuelType || foundVehicle.specifications?.fuelType || "Not specified",
+            mileage: foundVehicle.mileage || foundVehicle.specifications?.mileage || "Not specified",
+          },
+          amenities: foundVehicle.amenities || foundVehicle.features || [],
+        }
+        setVehicle(processedVehicle)
+        console.log("[VehicleDetails] Processed vehicle state set:", processedVehicle)
+        console.log(
+          `[VehicleDetails] Button status should be: ${processedVehicle.is_available ? "Book Now" : "Booked"}`,
+        )
+      } else {
+        console.log(`[VehicleDetails] Vehicle with ID ${vehicleId} not found.`)
+        setVehicle(null)
+      }
+    } catch (err) {
+      console.error("[VehicleDetails] Failed to fetch vehicle:", err)
+      setVehicle(null)
+    } finally {
+      setIsLoadingVehicle(false)
+      console.log("[VehicleDetails] Finished fetching vehicle.")
+    }
+  }
+
+  // Function to fetch ratings for the current vehicle
+  const fetchVehicleRatings = async (idToFetch) => {
+    if (!idToFetch) return
+    try {
+      const ratingsCollectionRef = collection(db, "ratings")
+      const q = query(ratingsCollectionRef, where("vehicleId", "==", idToFetch))
+      const querySnapshot = await getDocs(q)
+      const fetchedRatings = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate() : new Date(),
+      }))
+      fetchedRatings.sort((a, b) => b.createdAt - a.createdAt)
+      setCurrentVehicleRatings(fetchedRatings)
+
+      // Calculate average rating and update vehicle state
+      if (fetchedRatings.length > 0) {
+        const totalRating = fetchedRatings.reduce((sum, r) => sum + r.rating, 0)
+        const avg = (totalRating / fetchedRatings.length).toFixed(1)
+        setVehicle((prev) => ({
+          ...prev,
+          rating: avg,
+          reviews: fetchedRatings.length,
+        }))
+      } else {
+        setVehicle((prev) => ({
+          ...prev,
+          rating: "N/A",
+          reviews: 0,
+        }))
+      }
+    } catch (err) {
+      console.error("Error fetching vehicle ratings:", err)
+    }
+  }
 
   useEffect(() => {
-    const fetchVehicle = async () => {
-      try {
-        const snapshot = await getDocs(collection(db, "vehicles"))
-        const allVehicles = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-        const foundVehicle = allVehicles.find((v) => v.id === id)
-
-        if (foundVehicle) {
-          const processedVehicle = {
-            ...foundVehicle,
-            is_available: foundVehicle.isAvailable !== undefined ? foundVehicle.isAvailable : foundVehicle.is_available,
-            gallery: foundVehicle.imageId ? [foundVehicle.imageId] : foundVehicle.gallery || [],
-            longDescription: foundVehicle.longDescription || foundVehicle.description || "No description available",
-            // Ensure all specifications are grouped under 'specifications' for consistent display
-            specifications: {
-              engine: foundVehicle.specifications?.engine || "Not specified",
-              power: foundVehicle.specifications?.power || "Not specified",
-              seating: foundVehicle.specifications?.seating || "Not specified",
-              drivetrain: foundVehicle.specifications?.drivetrain || "Not specified",
-              fuelType: foundVehicle.fuelType || "Not specified", // Now pulled from top-level and included here
-              mileage: foundVehicle.mileage || "Not specified", // Now pulled from top-level and included here
-            },
-            amenities: foundVehicle.amenities || foundVehicle.features || [],
-            reviewsData: foundVehicle.reviewsData || [],
-          }
-          setVehicle(processedVehicle)
-        }
-      } catch (err) {
-        console.error("Failed to fetch vehicle", err)
-      }
+    if (id) {
+      fetchVehicle(id)
+      fetchVehicleRatings(id) // Fetch ratings when component loads
     }
-    fetchVehicle()
   }, [id])
 
   useEffect(() => {
@@ -63,6 +118,15 @@ export default function VehicleDetails() {
       document.body.classList.remove("modal-open")
     }
   }, [showBookingForm])
+
+  const handleCloseBookingForm = (bookedSuccessfully) => {
+    console.log(`[VehicleDetails] handleCloseBookingForm called. Booked successfully: ${bookedSuccessfully}`)
+    setShowBookingForm(false)
+    if (bookedSuccessfully) {
+      console.log("[VehicleDetails] Booking successful, re-fetching vehicle data...")
+      fetchVehicle(id)
+    }
+  }
 
   const getCloudinaryUrl = (publicId, options = {}) => {
     if (!publicId) return "/placeholder.svg?height=400&width=600&text=No+Image"
@@ -102,6 +166,18 @@ export default function VehicleDetails() {
     }))
   }
 
+  if (isLoadingVehicle) {
+    return (
+      <div className="vehicle-details-page">
+        <div className="container">
+          <div className="loading-message">
+            <h2>Loading vehicle details...</h2>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   if (!vehicle) {
     return (
       <div className="vehicle-details-page">
@@ -136,14 +212,14 @@ export default function VehicleDetails() {
               <div className="vehicle-rating-large">
                 <Star size={20} fill="currentColor" />
                 <span className="rating-value">{vehicle.rating || "4.5"}</span>
-                <span className="rating-count">({vehicle.reviews || "20"} reviews)</span>
+                <span className="rating-count">({vehicle.reviews || "0"} reviews)</span>
               </div>
               <div className="vehicle-category-badge">{vehicle.category}</div>
             </div>
           </div>
           <div className="vehicle-price-section">
             <div className="price-display">
-              <span className="price-amount">${vehicle.price}</span>
+              <span className="price-amount">RS{vehicle.price}</span>
               <span className="price-period">/day</span>
             </div>
             <button
@@ -282,7 +358,7 @@ export default function VehicleDetails() {
                         </div>
                       </div>
                       <div className="spec-item">
-                        <Gauge className="spec-icon" size={24} /> {/* New icon for Mileage */}
+                        <Gauge className="spec-icon" size={24} />
                         <div className="spec-info">
                           <div className="spec-label">Mileage</div>
                           <div className="spec-value">{vehicle.specifications?.mileage || "N/A"}</div>
@@ -334,28 +410,42 @@ export default function VehicleDetails() {
                     <div className="reviews-summary">
                       <div className="rating-summary">
                         <Star size={24} fill="currentColor" />
-                        <span className="rating-large">{vehicle.rating}</span>
+                        <span className="rating-large">{vehicle.rating || "N/A"}</span>
                         <span className="rating-text">out of 5</span>
                       </div>
                       <div className="reviews-count">{vehicle.reviews || 0} total reviews</div>
                     </div>
                   </div>
+
+                  {/* Reviews List Only - No Submission Form */}
                   <div className="reviews-list">
-                    {vehicle.reviewsData?.length > 0 ? (
-                      vehicle.reviewsData.map((review) => (
+                    {currentVehicleRatings.length > 0 ? (
+                      currentVehicleRatings.map((review) => (
                         <div key={review.id} className="review-item">
                           <div className="review-header">
-                            <div className="reviewer-info">
-                              <div className="reviewer-name">{review.name}</div>
-                              <div className="review-date">{new Date(review.date).toLocaleDateString()}</div>
+                            <div className="reviewer-info-with-avatar">
+                              <img
+                                src={review.userImageUrl || "/default-avatar.png"}
+                                alt="User Avatar"
+                                className="reviewer-avatar"
+                                onError={(e) => {
+                                  e.target.src = "/default-avatar.png"
+                                }}
+                              />
+                              <div className="reviewer-text-info">
+                                <div className="reviewer-email">{review.userEmail}</div>
+                                <div className="review-date">
+                                  {review.createdAt ? review.createdAt.toLocaleDateString() : "N/A"}
+                                </div>
+                              </div>
                             </div>
                             <div className="review-rating">
-                              {Array.from({ length: review.rating }).map((_, i) => (
-                                <Star key={i} size={16} fill="currentColor" />
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <Star key={i} size={16} className={`star-icon ${i < review.rating ? "filled" : ""}`} />
                               ))}
                             </div>
                           </div>
-                          <div className="review-comment">{review.comment}</div>
+                          <p className="review-comment">{review.comment}</p>
                         </div>
                       ))
                     ) : (
@@ -388,8 +478,9 @@ export default function VehicleDetails() {
           </div>
         </div>
       </div>
-      {/* Booking Form Modal (conditionally rendered) */}
-      {showBookingForm && <BookingForm vehicle={vehicle} onClose={() => setShowBookingForm(false)} />}
+
+      {/* Booking Form Modal */}
+      {showBookingForm && <BookingForm vehicle={vehicle} onClose={handleCloseBookingForm} />}
     </div>
   )
 }
