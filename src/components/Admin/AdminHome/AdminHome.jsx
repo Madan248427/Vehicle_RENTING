@@ -19,7 +19,7 @@ import {
   Activity,
   BarChart3,
 } from "lucide-react"
-import Sidebar from "../sidebar/sidebar-dashboard"
+import Sidebar from "../Sidebar/sidebar-dashboard"
 import styles from "./admin-home.module.css"
 
 export default function AdminHome() {
