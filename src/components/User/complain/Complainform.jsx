@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useUser } from "@clerk/clerk-react"
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore"
 import { db } from "../../firebase/firebase"
-import "./complain.css"
+import "./Complain.css"
 
 export default function VehicleComplaintForm() {
   const { user, isLoaded } = useUser()
