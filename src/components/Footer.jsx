@@ -35,35 +35,35 @@ export default function Footer() {
           <div className="footer-section">
             <h4 className="footer-title">Quick Links</h4>
             <ul className="footer-links">
-              <li>
-                <Link to="/" className="footer-link">
+              <li className="footer-link">
+                
                   Home
-                </Link>
+              
               </li>
-              <li>
-                <Link to="/about" className="footer-link">
+              <li className="footer-link">
+  
                   About Us
-                </Link>
+
               </li>
-              <li>
-                <Link to="/vehicles" className="footer-link">
+              <li className="footer-link">
+
                   Our Fleet
-                </Link>
+
               </li>
-              <li>
-                <Link to="/services" className="footer-link">
+              <li className="footer-link">
+    
                   Services
-                </Link>
+  
               </li>
-              <li>
-                <Link to="/contact" className="footer-link">
+              <li className="footer-link">
+
                   Contact
-                </Link>
+
               </li>
-              <li>
-                <Link to="/faq" className="footer-link">
+              <li className="footer-link">
+
                   FAQ
-                </Link>
+
               </li>
             </ul>
           </div>

@@ -4,20 +4,7 @@ import { useUser } from "@clerk/clerk-react"
 import { collection, getDocs, query, orderBy, doc, updateDoc } from "firebase/firestore"
 import { db } from "../../firebase/firebase"
 import { Link } from "react-router-dom" // Add this import
-import {
-  Calendar,
-  Plus,
-  User,
-  DollarSign,
-  Clock,
-  Loader2,
-  AlertCircle,
-  Eye,
-  X,
-  CheckCircle,
-  Flag,
-  Search,
-} from "lucide-react"
+import { Calendar, Plus, User, Clock, Loader2, AlertCircle, Eye, X, CheckCircle, Flag, Search } from "lucide-react"
 import Sidebar from "../Sidebar/sidebar-dashboard.jsx"
 import styles from "./BookingManagement.module.css"
 
@@ -36,7 +23,6 @@ export default function BookingManagement() {
   useEffect(() => {
     async function fetchBookings() {
       if (!isLoaded || !isSignedIn) return
-
       try {
         setLoading(true)
         setError(null)
@@ -54,7 +40,6 @@ export default function BookingManagement() {
         setLoading(false)
       }
     }
-
     fetchBookings()
   }, [isLoaded, isSignedIn, user])
 
@@ -102,9 +87,7 @@ export default function BookingManagement() {
         booking.userName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         booking.userEmail?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         booking.id?.toLowerCase().includes(searchTerm.toLowerCase())
-
       const matchesStatus = filterStatus === "all" || booking.bookingStatus?.toLowerCase() === filterStatus
-
       return matchesSearch && matchesStatus
     })
     .sort((a, b) => {
@@ -137,7 +120,6 @@ export default function BookingManagement() {
     ).length
     const pending = bookings.filter((b) => ["pending", "processing"].includes(b.bookingStatus?.toLowerCase())).length
     const totalRevenue = bookings.reduce((sum, b) => sum + (Number.parseFloat(b.totalPrice) || 0), 0)
-
     return { total, confirmed, pending, totalRevenue }
   }
 
@@ -154,7 +136,6 @@ export default function BookingManagement() {
         bookingStatus: newStatus,
         updatedAt: new Date(),
       })
-
       // If status is "finished", make vehicle available
       if (newStatus === "finished" && vehicleId) {
         await updateDoc(doc(db, "vehicles", vehicleId), {
@@ -162,12 +143,10 @@ export default function BookingManagement() {
           updatedAt: new Date(),
         })
       }
-
       // Update local state
       setBookings((prev) =>
         prev.map((booking) => (booking.id === bookingId ? { ...booking, bookingStatus: newStatus } : booking)),
       )
-
       if (selectedBooking && selectedBooking.id === bookingId) {
         setSelectedBooking({ ...selectedBooking, bookingStatus: newStatus })
       }
@@ -176,6 +155,11 @@ export default function BookingManagement() {
     } finally {
       setUpdating(false)
     }
+  }
+
+  // Helper function to check if booking is cancelled
+  const isBookingCancelled = (status) => {
+    return ["cancelled", "canceled"].includes(status?.toLowerCase())
   }
 
   if (!isLoaded) {
@@ -473,7 +457,11 @@ export default function BookingManagement() {
                   <button
                     className={`${styles.statusBtn} ${styles.verified}`}
                     onClick={() => handleStatusUpdate(selectedBooking.id, "verified")}
-                    disabled={updating || selectedBooking.bookingStatus === "verified"}
+                    disabled={
+                      updating ||
+                      selectedBooking.bookingStatus === "verified" ||
+                      isBookingCancelled(selectedBooking.bookingStatus)
+                    }
                   >
                     <CheckCircle size={16} />
                     {updating ? "Updating..." : "Verified"}
@@ -481,12 +469,15 @@ export default function BookingManagement() {
                   <button
                     className={`${styles.statusBtn} ${styles.finished}`}
                     onClick={() => handleStatusUpdate(selectedBooking.id, "finished", selectedBooking.vehicleId)}
-                    disabled={updating || selectedBooking.bookingStatus === "finished"}
+                    disabled={
+                      updating ||
+                      selectedBooking.bookingStatus === "finished" ||
+                      isBookingCancelled(selectedBooking.bookingStatus)
+                    }
                   >
                     <Flag size={16} />
                     {updating ? "Updating..." : "Finished"}
                   </button>
-                  
                 </div>
                 <button className={`${styles.modalBtn} ${styles.secondary}`} onClick={() => setShowDetailModal(false)}>
                   Close
@@ -497,6 +488,5 @@ export default function BookingManagement() {
         )}
       </div>
     </>
-    //disable button if cancelled and also add button to dishmished 
   )
 }

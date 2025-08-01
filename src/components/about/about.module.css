@@ -1,10 +1,8 @@
-/* Main container styles */
 .aboutPage {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  padding: 2rem 1rem;
+  padding: 2rem;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #1a202c;
+  color: #333;
+  background-color: #f9f9f9;
 }
 
 .container {
@@ -12,648 +10,338 @@
   margin: 0 auto;
 }
 
-/* Hero section */
 .aboutHero {
   text-align: center;
-  margin-bottom: 4rem;
-  position: relative;
+  margin-bottom: 3rem;
 }
 
 .aboutTitle {
-  font-size: 3.5rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-  color: #1a202c;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
 }
 
 .aboutSubtitle {
-  font-size: 1.375rem;
-  color: #4a5568;
-  margin-bottom: 3rem;
-  max-width: 70rem;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.7;
-  font-weight: 400;
-}
-
-.heroImageContainer {
-  position: relative;
-  display: flex;
-  justify-content: center;
+  font-size: 1.2rem;
+  color: #666;
   margin-bottom: 2rem;
 }
 
-.heroImage {
-  width: 80vw;
-  height: 80vh;
-  max-width: 900px;
-  max-height: 500px;
-  object-fit: cover;
-  border-radius: 1.5rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  transition: all 0.3s ease;
-}
-
-.heroImage:hover {
-  transform: scale(1.02);
-  box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.3);
-}
-
-/* Navigation */
 .aboutNavigation {
   display: flex;
   justify-content: center;
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
-.navButton {
-  padding: 1rem 2rem;
-  border-radius: 50px;
-  border: 3px solid transparent;
-  background: linear-gradient(white, white) padding-box, linear-gradient(135deg, #667eea, #764ba2) border-box;
-  color: #4a5568;
+.aboutNavigation button {
+  padding: 0.6rem 1.5rem;
+  background-color: transparent;
+  border: 2px solid #444;
+  border-radius: 999px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 600;
-  font-size: 1.1rem;
-  position: relative;
-  overflow: hidden;
+  transition: 0.3s;
 }
 
-.navButton::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  transition: left 0.3s ease;
-  z-index: -1;
+.aboutNavigation .active,
+.aboutNavigation button:hover {
+  background-color: #444;
+  color: #fff;
 }
 
-.navButton:hover::before,
-.navButton.active::before {
-  left: 0;
-}
-
-.navButton:hover,
-.navButton.active {
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-}
-
-/* Section titles */
-.sectionTitle {
-  font-size: 2.5rem;
-  font-weight: 700;
+.statsSection h2,
+.infoSection h2,
+.valuesSection h2,
+.teamSection h2 {
   text-align: center;
-  margin-bottom: 2.5rem;
-  color: #2d3748;
-  position: relative;
-}
-
-.sectionTitle::after {
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 4px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  border-radius: 2px;
-}
-
-/* Stats section */
-.statsSection {
-  margin-bottom: 4rem;
-}
-
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-}
-
-.statCard {
-  background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
-  padding: 2.5rem 2rem;
-  border-radius: 1.5rem;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  text-align: center;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  position: relative;
-  overflow: hidden;
-}
-
-.statCard::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-}
-
-.statCard:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 35px 60px -12px rgba(102, 126, 234, 0.3);
-}
-
-.statIconWrapper {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  border-radius: 50%;
-  width: 80px;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.5rem;
-}
-
-.statIcon {
-  color: white;
-}
-
-.statValue {
-  font-size: 2.5rem;
-  font-weight: 800;
-  margin-bottom: 0.5rem;
-  color: #2d3748;
-}
-
-.statLabel {
-  color: #718096;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-/* Info section */
-.infoSection {
-  margin-bottom: 4rem;
-}
-
-.infoContent {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  max-width: 80rem;
-  margin: 0 auto;
-}
-
-.infoCard {
-  background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
-  padding: 2rem;
-  border-radius: 1.25rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  border-left: 4px solid transparent;
-  background-clip: padding-box;
-  position: relative;
-}
-
-.infoCard::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  border-radius: 0 0 0 1.25rem;
-}
-
-.infoCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(102, 126, 234, 0.2);
-}
-
-.infoCardTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: #2d3748;
-}
-
-.infoCard p {
-  color: #4a5568;
-  line-height: 1.7;
-  margin: 0;
-}
-
-.infoCard strong {
-  color: #2d3748;
-  font-weight: 600;
-}
-
-/* Values section */
-.valuesSection {
-  margin-bottom: 4rem;
-}
-
-.valuesGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-}
-
-.valueCard {
-  background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
-  padding: 2.5rem 2rem;
-  border-radius: 1.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.valueCard:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 25px 50px -12px rgba(234, 88, 12, 0.3);
-}
-
-.valueIconWrapper {
-  background: linear-gradient(135deg, #f97316, #ea580c);
-  border-radius: 50%;
-  width: 70px;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.5rem;
-}
-
-.valueIcon {
-  color: white;
-}
-
-.valueTitle {
-  font-size: 1.375rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: #2d3748;
-}
-
-.valueDescription {
-  color: #4a5568;
-  font-size: 1rem;
-  line-height: 1.6;
-}
-
-.valueCardAccent {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(135deg, #f97316, #ea580c);
-}
-
-/* Team section */
-.teamSection {
-  margin-bottom: 4rem;
-}
-
-/* Team Leader Section */
-.leaderSection {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 5rem;
-}
-
-.leaderCard {
-  position: relative;
-  background: linear-gradient(135deg, #fef3c7 0%, gray 50%, gray 100%);
-  border-radius: 2rem;
-  box-shadow: 0 25px 50px -12px rgba(251, 191, 36, 0.4);
-  overflow: hidden;
-  max-width: 550px;
-  width: 100%;
-  transition: all 0.4s ease;
-  border: 6px solid gray;
-}
-
-.leaderCard:hover {
-  transform: translateY(-10px) scale(1.02);
-  box-shadow: 0 40px 80px -12px rgba(251, 191, 36, 0.6);
-}
-
-.leaderBadge {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  z-index: 10;
-  background: linear-gradient(135deg, #92400e, #78350f);
-  color: #fef3c7;
-  padding: 1rem 1.5rem;
-  border-radius: 50px;
-  font-size: 1rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-}
-
-.leaderImageContainer {
-  position: relative;
-  height: 22rem;
-  width: 100%;
-}
-
-.leaderImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.leaderOverlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(to top, rgba(251, 191, 36, 0.4), transparent 50%);
-}
-
-.leaderContent {
-  padding: 2.5rem;
-  background: linear-gradient(135deg, #ffffff 0%, #fefbf3 100%);
-  text-align: center;
-}
-
-.leaderName {
-  font-size: 2.5rem;
-  font-weight: 800;
-  margin-bottom: 0.75rem;
-  color: #92400e;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.leaderRole {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #d97706;
   margin-bottom: 1.5rem;
 }
 
-.leaderDesc {
-  color: #374151;
-  line-height: 1.7;
-  font-size: 1.125rem;
+.statsGrid,
+.valuesGrid {
+  display: grid;
+  gap: 2rem;
 }
 
-.leaderAccent {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 8px;
-  background: linear-gradient(135deg, gray,gray,gray);
-}
-
-/* Other Team Members Section */
-.membersSection {
-  margin-top: 4rem;
-}
-
-.membersTitle {
-  font-size: 2rem;
-  font-weight: 600;
+.statsGrid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   text-align: center;
-  margin-bottom: 3rem;
-  color: #2d3748;
-  position: relative;
 }
 
-.membersTitle::after {
+.statCard {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px #ccc;
+}
+
+.statCard svg {
+  color: #0070f3;
+  margin-bottom: 0.5rem;
+}
+
+.statCard div:nth-child(2) {
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.infoSection p {
+  max-width: 700px;
+  margin: 0.5rem auto;
+  line-height: 1.6;
+  color: #444;
+}
+
+.valuesGrid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  text-align: center;
+}
+
+.valueCard {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 8px #ccc;
+}
+
+.valueCard svg {
+  color: #ff5722;
+  margin-bottom: 0.5rem;
+}
+
+.valueCard h3 {
+  margin-bottom: 0.5rem;
+}
+
+/* Team Leader Section - Special Styling */
+.leaderSection {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+  padding: 0 1rem;
+}
+
+.leaderCard {
+  background: linear-gradient(135deg, #0c0c0c 0%, #764ba2 100%);
+  color: black;
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 450px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.leaderCard::before {
   content: "";
   position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 3px;
-  background: linear-gradient(135deg, #4299e1, #3182ce);
-  border-radius: 2px;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: rotate(45deg);
+  transition: all 0.6s;
 }
 
-.teamGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2.5rem;
+.leaderCard:hover::before {
+  animation: shine 0.6s ease-in-out;
 }
 
-.teamCard {
-  background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
-  border-radius: 1.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  transition: all 0.3s ease;
-  position: relative;
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
 }
 
-.teamCard:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 25px 50px -12px rgba(66, 153, 225, 0.3);
-}
-
-.teamImageContainer {
-  position: relative;
-  height: 18rem;
-  width: 100%;
-  overflow: hidden;
-}
-
-.teamImage {
-  width: 100%;
-  height: 100%;
+.leaderCard img {
+  width: 180px;
+  height: 180px;
   object-fit: cover;
-  transition: all 0.3s ease;
+  border-radius: 50%;
+  margin-bottom: 1.5rem;
+  border: 5px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
 }
 
-.teamCard:hover .teamImage {
+.leaderCard:hover img {
   transform: scale(1.05);
 }
 
-.teamImageOverlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(to top, rgba(66, 153, 225, 0.2), transparent 60%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+.leaderCard h3 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.teamCard:hover .teamImageOverlay {
-  opacity: 1;
+.leaderRole {
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  color: #ffd700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.teamContent {
-  padding: 2rem;
+.leaderDesc {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
   text-align: center;
 }
 
-.teamName {
-  font-size: 1.5rem;
-  font-weight: 700;
+/* Regular Team Members Grid */
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.teamCard {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.teamCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.teamCard img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 0.8rem;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.teamCard:hover img {
+  transform: scale(1.02);
+}
+
+.teamCard h3 {
+  font-size: 1.4rem;
   margin-bottom: 0.5rem;
-  color: #2d3748;
+  color: #333;
+  font-weight: 600;
 }
 
 .teamRole {
   font-weight: 600;
-  color: #4299e1;
+  color: #667eea;
   margin-bottom: 1rem;
-  font-size: 1.125rem;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .teamDesc {
-  color: #4a5568;
   font-size: 0.95rem;
-  line-height: 1.6;
+  color: #555;
+  line-height: 1.5;
+  text-align: left;
 }
 
-.teamCardAccent {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(135deg, #4299e1, #3182ce);
+.heroImage {
+  width: 80vw;
+  height: 90vh;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  display: block;
+  margin: 0 auto;
 }
 
-/* Responsive design */
+/* Responsive Design */
 @media (max-width: 768px) {
+  .aboutPage {
+    padding: 1rem;
+  }
+
   .aboutTitle {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
 
   .aboutSubtitle {
-    font-size: 1.125rem;
-  }
-
-  .heroImage {
-    width: 90vw;
-    height: 50vh;
-  }
-
-  .aboutNavigation {
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .navButton {
-    width: 250px;
-  }
-
-  .statsGrid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
-
-  .infoContent {
-    grid-template-columns: 1fr;
-  }
-
-  .valuesGrid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    font-size: 1rem;
   }
 
   .leaderSection {
-    margin-bottom: 4rem;
+    padding: 0;
   }
 
   .leaderCard {
+    padding: 2rem;
     max-width: 100%;
   }
 
-  .leaderImageContainer {
-    height: 18rem;
+  .leaderCard img {
+    width: 150px;
+    height: 150px;
   }
 
-  .leaderContent {
-    padding: 2rem;
-  }
-
-  .leaderName {
-    font-size: 2rem;
+  .leaderCard h3 {
+    font-size: 1.6rem;
   }
 
   .leaderRole {
-    font-size: 1.25rem;
-  }
-
-  .teamGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 480px) {
-  .aboutPage {
-    padding: 1rem 0.5rem;
-  }
-
-  .aboutTitle {
-    font-size: 2rem;
-  }
-
-  .aboutSubtitle {
-    font-size: 1rem;
-  }
-
-  .heroImage {
-    width: 95vw;
-    height: 40vh;
-  }
-
-  .navButton {
-    width: 200px;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-  }
-
-  .leaderImageContainer {
-    height: 16rem;
-  }
-
-  .leaderContent {
-    padding: 1.5rem;
-  }
-
-  .leaderName {
-    font-size: 1.75rem;
+    font-size: 1.1rem;
   }
 
   .leaderDesc {
     font-size: 1rem;
   }
 
-  .statCard,
-  .valueCard,
-  .infoCard {
-    padding: 1.5rem;
+  .teamGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
-  .teamContent {
-    padding: 1.5rem;
+  .teamCard {
+    padding: 1rem;
   }
 
-  .teamImageContainer {
-    height: 16rem;
+  .heroImage {
+    width: 95vw;
+    height: 50vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .aboutNavigation {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .aboutNavigation button {
+    width: 200px;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .valuesGrid {
+    grid-template-columns: 1fr;
   }
 }
